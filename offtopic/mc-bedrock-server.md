@@ -125,13 +125,21 @@ content-log-file-enabled = false
 compression-threshold = 1
 # 要压缩的原始网络有效负载的最小大小
 # 允许值 : [0, 65535]
-# 当前版本 (1.16.220.02) mojang 正在重做服务器权威移动，无法正常使用。
 
+# 个别版本 (1.16.220.02 ) mojang 正在重做服务器权威移动，无法正常使用。
 server-authoritative-movement = true
 # 启用服务端权威性移动。
+# 允许值 ：
+#   是 ：true
+#   否 ：false
+#   是并回溯 ： server-auth-with-rewind
 # 如果值为 true ，则服务端将在以下位置重设本地用户输入。
 #   1. 客户端的位置与服务端的位置不匹配时，发送服务端更正位置并向下发送至客户端更正。
 #   2. 仅当正确的玩家移动设置为 true 时，才会进行更正。
+# 如果值为 server-auth-with-rewind 
+#   1. 则服务端将不再更正玩家位置而是将游戏时间回溯到客户端与服务端位置不匹配之前
+#   2. 将占用更多内存
+#   3. 玩家游玩相对于仅更正玩家位置更流畅
 
 player-movement-score-threshold = 20
 # 报告异常行为之前所需的数据不一致的数量。
@@ -180,10 +188,14 @@ world-type =
 
 如果您想同时在一台电脑上运行服务端和客户端，并且想通过客户端直接连接本地的话，可能会遇到一些问题：某些 Windows 版本默认不允许 UWP 应用形成本地回环，需要手动解除限制。
 
-请使用管理员权限在 PowerShell 中执行以下命令并重启电脑：
+请使用管理员权限在 PowerShell 中执行以下命令之一并重启电脑：
 
 ```powershell
 CheckNetIsolation.exe LoopbackExempt –a –p=S-1-15-2-1958404141-86561845-1752920682-3514627264-368642714-62675701-733520436
+```
+
+```powershell
+CheckNetIsolation LoopbackExempt -a -n="Microsoft.MinecraftUWP_8wekyb3d8bbwe"
 ```
 
 ## BDS on Linux
